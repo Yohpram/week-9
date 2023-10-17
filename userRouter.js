@@ -15,6 +15,30 @@ router.get('/', function (req, res, next) {
 
 });
 
+router.get('/peg', async (req, res, next) => {
+  
+  try {
+    // Membuka koneksi database
+    const client = await pool.connect();
+
+    const page = parseInt(req.query.page) || 1; 
+    const limit = parseInt(req.query.limit) || 10; // .
+    const offset = (page - 1) * limit; 
+
+    const query = 'SELECT * FROM public.users LIMIT $1 OFFSET $2';
+    const values = [limit, offset];
+
+    const { rows } = await client.query(query, values);
+
+    // Menutup koneksi database
+    client.release();
+
+    res.status(200).json(rows);
+  } catch (err) {
+    next(err)
+  }
+  });
+
 
 router.post('/register', function (req, res, next) {
     const { id, email, gender, password, role } = req.body;
