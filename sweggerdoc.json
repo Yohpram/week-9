@@ -1,0 +1,159 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Movie API",
+    "description": "API for managing movies",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Movies",
+      "description": "Movie-related operations"
+    }
+  ],
+  "paths": {
+    "/movies": {
+      "get": {
+        "summary": "Get a list of movies",
+        "description": "Retrieve a list of all movies",
+        "tags": ["Movies"],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MovieList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/movies/{movieId}": {
+      "post": {
+        "summary": "Create a new movie",
+        "description": "Create a new movie with the given details",
+        "tags": ["Movies"],
+        "parameters": [
+          {
+            "name": "movieId",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID of the movie"
+          }
+        ],
+        "requestBody": {
+          "description": "Movie details",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Movie"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Movie data inserted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessMessage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a movie",
+        "description": "Update a movie with the given ID",
+        "tags": ["Movies"],
+        "parameters": [
+          {
+            "name": "movieId",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID of the movie to update"
+          }
+        ],
+        "requestBody": {
+          "description": "Updated movie details",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Movie"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Movie data updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Movie not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Movie": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "genres": {
+            "type": "array"
+          },
+          "year": {
+            "type": "integer"
+          }
+        }
+      },
+      "MovieList": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Movie"
+        }
+      },
+      "SuccessMessage": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string" 
+          }
+        }
+      }
+    }
+  }
+}
