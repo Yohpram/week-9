@@ -5,7 +5,7 @@ const { generateToken } = require('../week-9/helpers/jwt')
 
 router.get('/', function (req, res, next) {
    pool.query = ('SELECT * FROM public.users', (err, result) => {
- 
+    
   if(err) {
       next(err)
   } else {
@@ -13,6 +13,16 @@ router.get('/', function (req, res, next) {
   }
 })
 
+});
+
+router.get('/all', function (req, res, next) {
+  pool.query('SELECT * FROM public.users', (err, result) => {
+    if (err) {
+      next(err);
+    } else {
+      res.status(200).json(result.rows); // Menggunakan result.rows untuk mendapatkan hasil dari query
+    }
+  });
 });
 
 router.get('/peg', async (req, res, next) => {
@@ -38,6 +48,7 @@ router.get('/peg', async (req, res, next) => {
     next(err)
   }
   });
+
 
 
 router.post('/register', function (req, res, next) {
