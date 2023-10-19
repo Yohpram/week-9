@@ -1,21 +1,26 @@
+
 const express = require('express');
 const pool = require('./query.js');
 const router = express.Router();
 const { authorize } = require ('../week-9/middwares/auth.js')
-
+const app = express()
 
 router.use(authorize);
 
-router.get('/all', async (req, res) => {
+router.get('/', async (req, res) => {
 
-  console.log('masuk route get move')
+  console.log('masuk route get movie')
   try {
-  const result = `SELECT * FROM public.movies`;
+    // Eksekusi permintaan SQL ke database
+    const client = await pool.connect();
+    const result = await client.query('SELECT * FROM public.movies');
+    client.release(); // Kembalikan koneksi ke pool
 
-  res.status(200).json({massage: 'sucess', result});
+    // Kirim hasil ke client sebagai respons JSON
+    res.status(200).json({ message: 'success', result: result.rows });
   } catch (err) {
-  console.error(err);
-  next(err)
+    console.error(err);
+    next(err);
   }
 });
 
